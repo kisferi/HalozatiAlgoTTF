@@ -2,29 +2,29 @@ import random
 import numpy
 
 class TransferToTransfer:
-    def __init__(self, numberOfAgent, jsonArray = '', baseStationPosition = 0):
+    def __init__(self, numberOfAgents, jsonArray = '', baseStationPosition = 0):
         if jsonArray:
             self.probabilityList = []
             for item in jsonArray:
                 for i in item:
                     self.probabilityList.append(i)
 
-            self.numberOfAgent = int((len(self.probabilityList) + 1)**(0.5))
+            self.numberOfAgents = int((len(self.probabilityList) + 1)**(0.5))
         else:
-            self.numberOfAgent = numberOfAgent
-            self.probabilityList = [0 for i in range(self.numberOfAgent*self.numberOfAgent)]
+            self.numberOfAgents = numberOfAgents
+            self.probabilityList = [0 for i in range(self.numberOfAgents*self.numberOfAgents)]
             self.generate_random_probabilty_matrix()
 
         self.baseStationPosition = baseStationPosition
-        self.probabilityMatrix = numpy.reshape(self.probabilityList, (self.numberOfAgent, self.numberOfAgent))
+        self.probabilityMatrix = numpy.reshape(self.probabilityList, (self.numberOfAgents, self.numberOfAgents))
 
-        self.coverTimeList = [1 for i in range(self.numberOfAgent)]
+        self.coverTimeList = [1 for i in range(self.numberOfAgents)]
         self.calculate_cover_time()
 
-        self.tokenList = [1 for i in range(self.numberOfAgent)]
+        self.tokenList = [1 for i in range(self.numberOfAgents)]
         self.tokenList[self.baseStationPosition] = 0
 
-        self.optionsForRandomChoice = [i for i in range(self.numberOfAgent*self.numberOfAgent)]
+        self.optionsForRandomChoice = [i for i in range(self.numberOfAgents*self.numberOfAgents)]
 
         print('TransferToTransfer object is created!')
         print('Probability list:')
@@ -35,9 +35,9 @@ class TransferToTransfer:
         print(self.coverTimeList)
 
     def calculate_cover_time(self):
-        for currentAgent in range(self.numberOfAgent):
-            for i in range(self.numberOfAgent):
-                for j in range(self.numberOfAgent):
+        for currentAgent in range(self.numberOfAgents):
+            for i in range(self.numberOfAgents):
+                for j in range(self.numberOfAgents):
                     if (i == currentAgent) != (j == currentAgent):
                         self.coverTimeList[currentAgent] *= self.probabilityMatrix[i][j]
 
@@ -52,7 +52,7 @@ class TransferToTransfer:
                 self.probabilityList[i] = random.randint(1, 1000)
                 generatedNumbersSum += self.probabilityList[i]
             else:
-                diagonal += self.numberOfAgent + 1
+                diagonal += self.numberOfAgents + 1
 
         probabilitySum = 0
         for i in range(len(self.probabilityList)):
@@ -63,7 +63,7 @@ class TransferToTransfer:
             self.probabilityList[1] += 1 - probabilitySum
 
     def calculate_index(self, numberOflabel):
-        return (numberOflabel % self.numberOfAgent, int(numberOflabel / self.numberOfAgent))
+        return (numberOflabel % self.numberOfAgents, int(numberOflabel / self.numberOfAgents))
 
     def make_transaction(self, sender, receiver):
         if self.tokenList[sender] == 0:
@@ -99,4 +99,4 @@ class TransferToTransfer:
         return [currentInteraction, self.token_transaction(currentInteraction)]
 
     def is_termination_configuration(self):
-        return self.tokenList[self.baseStationPosition] == self.numberOfAgent - 1
+        return self.tokenList[self.baseStationPosition] == self.numberOfAgents - 1
