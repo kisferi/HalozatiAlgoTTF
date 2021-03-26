@@ -2,17 +2,30 @@ import random
 import numpy
 
 class TransferToTransfer:
-    def __init__(self, numberOfAgent, baseStationPosition):
-        self.numberOfAgent = numberOfAgent
-        self.probabilityList = [0 for i in range(self.numberOfAgent*self.numberOfAgent)]
-        self.optionsForRandomChoice = [i for i in range(self.numberOfAgent*self.numberOfAgent)]
-        self.coverTimeList = [1 for i in range(self.numberOfAgent)]
+    def __init__(self, numberOfAgent, jsonArray = '', baseStationPosition = 0):
+        if jsonArray:
+            self.probabilityList = []
+            for item in jsonArray:
+                for i in item:
+                    self.probabilityList.append(i)
+
+            self.numberOfAgent = int((len(self.probabilityList) + 1)**(0.5))
+        else:
+            self.numberOfAgent = numberOfAgent
+            self.probabilityList = [0 for i in range(self.numberOfAgent*self.numberOfAgent)]
+            self.generate_random_probabilty_matrix()
+
         self.baseStationPosition = baseStationPosition
-        self.generate_random_probabilty_matrix()
         self.probabilityMatrix = numpy.reshape(self.probabilityList, (self.numberOfAgent, self.numberOfAgent))
+
+        self.coverTimeList = [1 for i in range(self.numberOfAgent)]
+        self.calculate_cover_time()
+
         self.tokenList = [1 for i in range(self.numberOfAgent)]
         self.tokenList[self.baseStationPosition] = 0
-        self.calculate_cover_time()
+
+        self.optionsForRandomChoice = [i for i in range(self.numberOfAgent*self.numberOfAgent)]
+
         print('TransferToTransfer object is created!')
         print('Probability list:')
         print(self.probabilityList)
@@ -26,10 +39,10 @@ class TransferToTransfer:
             for i in range(self.numberOfAgent):
                 for j in range(self.numberOfAgent):
                     if (i == currentAgent) != (j == currentAgent):
-                        # TODO: this calculation is not the appropriate, just similar, but is it good for us? (Page 5 / cover time)
                         self.coverTimeList[currentAgent] *= self.probabilityMatrix[i][j]
 
             self.coverTimeList[currentAgent] = 1 - self.coverTimeList[currentAgent]
+            # TODO: make a list for different categories of cover times
 
     def generate_random_probabilty_matrix(self):
         diagonal = 0
@@ -53,8 +66,12 @@ class TransferToTransfer:
         return (numberOflabel % self.numberOfAgent, int(numberOflabel / self.numberOfAgent))
 
     def make_transaction(self, sender, receiver):
+        if self.tokenList[sender] == 0:
+            return False
+
         self.tokenList[receiver] += self.tokenList[sender]
         self.tokenList[sender] = 0
+        return True
 
     def cover_time_greater(self, sender, receiver):
         if self.coverTimeList[sender] > self.coverTimeList[receiver]:
@@ -62,21 +79,18 @@ class TransferToTransfer:
         return False
 
     def token_transaction(self, interactionPair):
-        # TODO: is there a direction of a transaction?
-        if interactionPair[0] == self.baseStationPosition or interactionPair[1] == self.baseStationPosition:
-            if interactionPair[0] == self.baseStationPosition:
-                self.make_transaction(interactionPair[1], self.baseStationPosition)
-            else:
-                self.make_transaction(interactionPair[0], self.baseStationPosition)
-            return True
+        # interactionPair is a pair like (i,j). There is a direction and it means that i makes an interaction
+        # and j can send its tokens to i if i is faster than j.
+        # If i is the base station then j always sends its tokens if j has any tokens.
+        if interactionPair[0] == self.baseStationPosition:
+            return self.make_transaction(interactionPair[1], self.baseStationPosition)
 
-        if self.cover_time_greater(interactionPair[0], interactionPair[1]):
-            self.make_transaction(interactionPair[0], interactionPair[1])
-            return True
+        # If j is the base station then there are no tokens sending.
+        if interactionPair[1] == self.baseStationPosition:
+            return False
 
         if self.cover_time_greater(interactionPair[1], interactionPair[0]):
-            self.make_transaction(interactionPair[1], interactionPair[0])
-            return True
+            return self.make_transaction(interactionPair[1], interactionPair[0])
 
         return False
 
