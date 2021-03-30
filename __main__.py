@@ -11,12 +11,14 @@ parser.add_argument('-json', dest='jsonFile',
 args = parser.parse_args()
 
 def running_ttf(ttfObject):
-    numberOfInteraction = 1
+    numberOfInteractions = 0
     while ttfObject.is_termination_configuration() != True:
         print('Current interaction: ', ttfObject.next_interaction())
-        print('Number of interaction: ', numberOfInteraction)
-        numberOfInteraction += 1
+        numberOfInteractions += 1
+        print('Number of interactions: ', numberOfInteractions)
         print('TokenList: ', ttfObject.tokenList)
+
+    print('Result number of interaction: ', numberOfInteractions)
 
 def test_with_generating_probability(numberOfAgents):
     simpleTtf = ttf.TransferToTransfer(numberOfAgents)
@@ -30,7 +32,7 @@ def test_with_json_file(jsonFile):
     running_ttf(simpleTtf)
 
 def main():
-    if args.numberOfAgents:
+    if args.numberOfAgents and not args.jsonFile:
         test_with_generating_probability(args.numberOfAgents)
 
     if args.jsonFile:
