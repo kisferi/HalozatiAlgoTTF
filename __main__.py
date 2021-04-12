@@ -1,6 +1,8 @@
 import argparse
 import json
 import transfer_to_transfer as ttf
+import ttf_visualization as ttfv
+
 
 parser = argparse.ArgumentParser(description='Transfer to tranfer')
 parser.add_argument('-agents', dest='numberOfAgents', type=int, default=3,
@@ -22,14 +24,18 @@ def running_ttf(ttfObject):
 
 def test_with_generating_probability(numberOfAgents):
     simpleTtf = ttf.TransferToTransfer(numberOfAgents)
-    running_ttf(simpleTtf)
+    # running_ttf(simpleTtf)
+    vis = ttfv.TTFVisualizer(simpleTtf)
+    vis.run_ttf()
 
 
 def test_with_json_file(jsonFile):
     inputFile = open(jsonFile)
     jsonArray = json.load(inputFile)
     simpleTtf = ttf.TransferToTransfer(0, jsonArray)
-    running_ttf(simpleTtf)
+    # running_ttf(simpleTtf)
+    vis = ttfv.TTFVisualizer(simpleTtf)
+    vis.run_ttf()
 
 def main():
     if args.numberOfAgents and not args.jsonFile:
