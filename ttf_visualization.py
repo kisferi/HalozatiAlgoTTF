@@ -4,43 +4,45 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import transfer_to_transfer as ttf
 import time
+from matplotlib.widgets import Button
 
 class TTFVisualizer:
+    index = 0
 
     def __init__(self, ttfObject):
-        self.fromNodes = []
-        self.toNodes = []
         self.ttfObject = ttfObject
+        self.index = 0
+
 
     def run_ttf(self):
-        numberOfInteractions = 0
+        #setThe graph
         G = nx.MultiDiGraph()
-        colorMap=[]
-        for i in range(0, self.ttfObject.numberOfAgents):
-            G.add_node(i)
-            if i==0:
-                colorMap.append('red')
-            else:
-                colorMap.append('blue')
-
-        pos = nx.circular_layout(G)
+        G.add_nodes_from(range(0,self.ttfObject.numberOfAgents))
+        #set the node colors and positions
+        node_colors=['blue' for x in range(self.ttfObject.numberOfAgents)]
+        node_colors[0]='red'
+        node_positions = nx.circular_layout(G)
+        #turn on pyplot interactive mode
         plt.ion()
-        interactions=[]
+        i = 0
+        interactions = []
         while self.ttfObject.is_termination_configuration() != True:
-            currentInteraction = self.ttfObject.next_interaction()
-            print('Current interaction: ', currentInteraction)
-            numberOfInteractions += 1
-            print('Number of interactions: ', numberOfInteractions)
-            print('TokenList: ', self.ttfObject.tokenList)
+            interactions.append(self.ttfObject.next_interaction())
+            interaction = (interactions[i][0][0], interactions[i][0][1])
 
-            print("Interactions: ",interactions)
+            G.add_edge(interactions[i][0][0], interactions[i][0][1])
 
-            G.add_edge(currentInteraction[0][0], currentInteraction[0][1])
-            
-            nx.draw(G,with_labels=True, node_color = colorMap, pos= pos)
+            print('Current interaction: ', interactions[i])
+            print('Number of interactions: ', i)
+
+            i += 1
+            nx.draw(G,with_labels=True, node_color = node_colors, pos = node_positions)
             if not self.ttfObject.is_termination_configuration():
-                plt.pause(0.1)
+                plt.pause(1)
                 plt.show()
                 plt.clf()
-                
-           
+            else:
+                plt.show(block=True)
+    
+            
+        
