@@ -14,12 +14,17 @@ args = parser.parse_args()
 
 def running_ttf(ttfObject):
     numberOfInteractions = 0
+    numberOfTransmission = 0
     while ttfObject.is_termination_configuration() != True:
-        print('Current interaction: ', ttfObject.next_interaction())
+        current = ttfObject.next_interaction()
+        print('Current interaction: ', current)
         numberOfInteractions += 1
         print('Number of interactions: ', numberOfInteractions)
         print('TokenList: ', ttfObject.tokenList)
+        if current[1] == True:
+            numberOfTransmission += 1
 
+    print('Result number of transmission: ', numberOfTransmission)
     print('Result number of interaction: ', numberOfInteractions)
 
 def test_with_generating_probability(numberOfAgents):
