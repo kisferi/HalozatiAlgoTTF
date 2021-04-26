@@ -60,6 +60,9 @@ class TTFVisualizer:
         #set the node colors and positions
         self.node_colors = []
         self.node_colors=['blue' for x in range(self.ttfObject.numberOfAgents)]
+        for i in range(len(self.ttfObject.tokenList)):
+            if self.ttfObject.tokenList[i] == 0:
+                self.node_colors[i] = 'gray'
         self.node_colors[0]='red'
 
     def set_sender_reciver_colors(self, interactionIndex):
