@@ -58,6 +58,8 @@ class TransferToTransfer:
         else:
             print('TransferToTransfer object is created!')
 
+        self.numberOfDataTransitions = 0
+
         print('Probability list:')
         print(self.probabilityList)
         print('Probability matrix:')
@@ -131,6 +133,7 @@ class TransferToTransfer:
         # and j can send its tokens to i if i is faster than j.
         # If i is the base station then j always sends its tokens if j has any tokens.
         if interactionPair[0] == self.baseStationPosition:
+            self.numberOfDataTransitions+=1
             return self.make_transaction(interactionPair[1], self.baseStationPosition)
 
         # If j is the base station then there are no tokens sending.
@@ -138,6 +141,7 @@ class TransferToTransfer:
             return False
 
         if self.cover_time_greater(interactionPair[1], interactionPair[0]):
+            self.numberOfDataTransitions+=1
             return self.make_transaction(interactionPair[1], interactionPair[0])
 
         return False

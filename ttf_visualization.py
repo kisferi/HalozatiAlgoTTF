@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import transfer_to_transfer as ttf
 import time
 from matplotlib.widgets import Button
+from matplotlib.widgets import TextBox
 
 class TTFVisualizer:
     index = 0
@@ -64,7 +65,14 @@ class TTFVisualizer:
         axcut = plt.axes([0.23, 0.1, 0.2, 0.075])
         self.next_trans_btn = Button(axcut, 'Next Transfer')
         self.next_trans_btn.on_clicked(self.run)
-
+        
+        #add text with time and energy consumed
+        axcut = plt.axes([0.63, 0.1, 0.1, 0.075])
+        self.text_box1 = TextBox(axcut, "Time: ")
+        self.text_box1.set_val(str(self.index))
+        axcut = plt.axes([0.83, 0.1, 0.1, 0.075])
+        self.text_box2 = TextBox(axcut, "Energy: ")
+        self.text_box2.set_val(str(self.ttfObject.numberOfDataTransitions))
         plt.show()
 
     def run(self, event):
@@ -84,13 +92,16 @@ class TTFVisualizer:
             nx.draw_networkx_labels(self.G,ax= self.ax[0], pos = self.outter_node_lable_pos, labels=self.outter_node_lables)
 
             if not self.ttfObject.is_termination_configuration():
-                plt.pause(0.5)
+                plt.pause(0.6)
+                self.text_box2.set_val(str(self.ttfObject.numberOfDataTransitions))
+            # #increase the interactions number
+                self.index += 1
+
+                self.text_box1.set_val(str(self.index))
                 plt.show()
             else:
                 print("Done")
                 plt.show(block=True)
-            # #increase the interactions number
-            self.index += 1
             
 
     def next(self, event):
@@ -108,8 +119,10 @@ class TTFVisualizer:
 
             nx.draw(self.G,ax = self.ax[0] ,with_labels=True, node_color = self.node_colors, pos = self.node_positions, labels = self.node_labels, edge_color = self.edeg_colors, linewidths=4, font_size=16,node_size=250,  width=2)
             nx.draw_networkx_labels(self.G,ax= self.ax[0], pos = self.outter_node_lable_pos, labels=self.outter_node_lables)
-            plt.show()
+            self.text_box2.set_val(str(self.ttfObject.numberOfDataTransitions))
             self.index += 1
+            self.text_box1.set_val(str(self.index))
+            plt.show()
 
     def set_node_outter_lables(self):
         self.outter_node_lable_pos = {}
