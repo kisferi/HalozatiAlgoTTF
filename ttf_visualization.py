@@ -11,8 +11,6 @@ class TTFVisualizer:
     index = 0
     node_colors = []
     node_labels = {}
-    outter_node_lables = {}
-    outter_node_lable_pos = {}
     node_positions = []
     interactions = []
     G = nx.MultiGraph()
@@ -27,7 +25,6 @@ class TTFVisualizer:
         #set the graph
         self.G.add_nodes_from(range(0,self.ttfObject.numberOfAgents))
         self.node_positions = nx.spring_layout(self.G)
-        self.set_node_outter_lables()
 
     def run_ttf(self):
         #turn on pyplot interactive mode
@@ -39,8 +36,7 @@ class TTFVisualizer:
         #set the node colors
         self.set_node_colors()
         self.set_node_labels()
-        nx.draw(self.G, ax = self.ax[0] ,with_labels=True, node_color = self.node_colors, pos = self.node_positions, labels = self.node_labels, linewidths=4, font_size=16,node_size=250,  width=2, connectionstyle="arc3,rad=0.3")
-        nx.draw_networkx_labels(self.G,ax= self.ax[0], pos = self.outter_node_lable_pos, labels=self.outter_node_lables)
+        nx.draw(self.G, ax = self.ax[0] ,with_labels=True, node_color = self.node_colors, pos = self.node_positions, labels = self.node_labels, linewidths=4, font_size=12,node_size=500,  width=2)
 
         for i in range(self.ttfObject.numberOfAgents):
             for j in range(self.ttfObject.numberOfAgents):
@@ -93,8 +89,7 @@ class TTFVisualizer:
             self.set_sender_reciver_colors(self.index)
             self.set_interaction_edge_color(self.index)
 
-            nx.draw(G=self.G,ax = self.ax[0] ,with_labels=True, node_color = self.node_colors, pos = self.node_positions, labels = self.node_labels, linewidths=4, font_size=16,node_size=250,  width=2)
-            nx.draw_networkx_labels(self.G,ax= self.ax[0], pos = self.outter_node_lable_pos, labels=self.outter_node_lables)
+            nx.draw(self.G, ax = self.ax[0] ,with_labels=True, node_color = self.node_colors, pos = self.node_positions, labels = self.node_labels, linewidths=4, font_size=12,node_size=500,  width=2)
 
             if not self.ttfObject.is_termination_configuration():
                 plt.pause(0.2)
@@ -122,22 +117,13 @@ class TTFVisualizer:
             self.set_sender_reciver_colors(self.index)
             self.set_interaction_edge_color(self.index)
 
-            nx.draw(self.G,ax = self.ax[0] ,with_labels=True, node_color = self.node_colors, pos = self.node_positions, labels = self.node_labels, font_size=16,node_size=250,  width=2)
-            nx.draw_networkx_labels(self.G,ax= self.ax[0], pos = self.outter_node_lable_pos, labels=self.outter_node_lables)
+            nx.draw(self.G, ax = self.ax[0] ,with_labels=True, node_color = self.node_colors, pos = self.node_positions, labels = self.node_labels, linewidths=4, font_size=12,node_size=500,  width=2)
+
             self.text_box2.set_val(str(self.ttfObject.numberOfDataTransitions))
             self.index += 1
             self.text_box1.set_val(str(self.index))
             plt.show()
-
-    def set_node_outter_lables(self):
-        self.outter_node_lable_pos = {}
-        for node, coords in self.node_positions.items():
-            self.outter_node_lable_pos[node] = (coords[0], coords[1] - 0.09)
-        node_attrs = self.G.nodes
-        self.outter_node_lables = {}
-        for node in node_attrs:
-            self.outter_node_lables[node] = chr(ord('a')+node)
-
+    
     def set_node_colors(self):
         #set the node colors and positions
         self.node_colors = []
@@ -150,13 +136,16 @@ class TTFVisualizer:
     def set_sender_reciver_colors(self, interactionIndex):
         self.node_colors[self.interactions[interactionIndex][0][1]] = 'yellow'
         self.node_colors[self.interactions[interactionIndex][0][0]] = 'orange'
+        if self.ttfObject.is_termination_configuration():
+            self.node_colors[0] = 'green'
+
 
     def set_node_labels(self):
         #set the node lables
         k=0
         self.node_labels = {}
         for el  in self.ttfObject.tokenList:
-            self.node_labels[k] = el
+            self.node_labels[k] = chr(ord('a')+k) + '(' + str(el)+')'
             k +=1
 
     def set_interaction_edge_color(self, interactionIndex):
