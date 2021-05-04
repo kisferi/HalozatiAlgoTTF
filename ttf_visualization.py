@@ -81,7 +81,7 @@ class TTFVisualizer:
             self.ax[0].clear()
             self.interactions.append(self.ttfObject.next_interaction())
             print('Current interaction: ', self.interactions[self.index])
-            print('Number of interactions: ', self.index)
+            print('Number of interactions: ', self.index+1)
 
             #set the node colors
             self.set_node_colors()
@@ -101,6 +101,13 @@ class TTFVisualizer:
                 plt.show()
             else:
                 print("Done")
+                self.index += 1
+                self.text_box1.set_val(str(self.index))
+                self.text_box2.set_val(str(self.ttfObject.numberOfDataTransitions))
+                plt.show()
+                #f=open("test_ttf.txt", "a+")
+                #f.write("Time = " + str(self.index) + "      Energy = " + str(self.ttfObject.numberOfDataTransitions) + '\n')
+                #f.close()
                 plt.show(block=True)
 
 
@@ -109,7 +116,8 @@ class TTFVisualizer:
             self.ax[0].clear()
             self.interactions.append(self.ttfObject.next_interaction())
             print('Current interaction: ', self.interactions[self.index])
-            print('Number of interactions: ', self.index)
+            print('Number of interactions: ', self.index+1)
+            print('Number of transitions: ', self.ttfObject.numberOfDataTransitions)
 
             #set the node colors
             self.set_node_colors()
