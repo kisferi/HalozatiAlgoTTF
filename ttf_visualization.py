@@ -40,17 +40,18 @@ class TTFVisualizer:
 
         for i in range(self.ttfObject.numberOfAgents):
             for j in range(self.ttfObject.numberOfAgents):
-                source, target = i,j
-                arrowprops=dict(arrowstyle="<|-", color="black",
-                                shrinkA=15, shrinkB=15,
-                                patchA=None, patchB=None,
-                                connectionstyle="arc3,rad=0.1",
-                                )
-                self.ax[0].annotate("",
-                            xy=self.node_positions[source],
-                            xytext=self.node_positions[target],
-                            arrowprops=arrowprops
-                        )
+                if (self.ttfObject.probabilityMatrix[i][j]!=0):
+                    source, target = i,j
+                    arrowprops=dict(arrowstyle="<|-", color="black",
+                                    shrinkA=15, shrinkB=15,
+                                    patchA=None, patchB=None,
+                                    connectionstyle="arc3,rad=0.1",
+                                    )
+                    self.ax[0].annotate("",
+                                xy=self.node_positions[source],
+                                xytext=self.node_positions[target],
+                                arrowprops=arrowprops
+                            )
 
         #run button
         axcut = plt.axes([0.01, 0.002, 0.1, 0.075])
@@ -105,9 +106,9 @@ class TTFVisualizer:
                 self.text_box1.set_val(str(self.index))
                 self.text_box2.set_val(str(self.ttfObject.numberOfDataTransitions))
                 plt.show()
-                #f=open("test_ttf.txt", "a+")
-                #f.write("Time = " + str(self.index) + "      Energy = " + str(self.ttfObject.numberOfDataTransitions) + '\n')
-                #f.close()
+                f=open("test_ttf.txt", "a+")
+                f.write("Time = " + str(self.index) + "      Energy = " + str(self.ttfObject.numberOfDataTransitions) + '\n')
+                f.close()
                 plt.show(block=True)
 
 
@@ -158,7 +159,8 @@ class TTFVisualizer:
 
     def set_interaction_edge_color(self, interactionIndex):
         for i in range(self.ttfObject.numberOfAgents):
-                for j in range(self.ttfObject.numberOfAgents):
+            for j in range(self.ttfObject.numberOfAgents):
+                if (self.ttfObject.probabilityMatrix[i][j]!=0):
                     source, target = i,j
                     color = 'black'
                     if source == self.interactions[self.index][0][1] and target == self.interactions[self.index][0][0]:

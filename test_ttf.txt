@@ -62,3 +62,36 @@ Time = 11      Energy = 3
 Time = 6      Energy = 3
 Time = 3      Energy = 3
 Time = 12      Energy = 3
+sample5 ttf
+Time = 115      Energy = 8
+Time = 89      Energy = 10
+Time = 22      Energy = 7
+Time = 130      Energy = 11
+Time = 49      Energy = 14
+Time = 122      Energy = 10
+Time = 45      Energy = 8
+Time = 28      Energy = 8
+Time = 128      Energy = 8
+Time = 68      Energy = 9
+Time = 42      Energy = 8
+Time = 311      Energy = 11
+Time = 69      Energy = 9
+Time = 109      Energy = 11
+Time = 92      Energy = 11
+sample6 lazy ttf
+Time = 68      Energy = 9
+Time = 68      Energy = 11
+Time = 52      Energy = 10
+Time = 93      Energy = 10
+Time = 30      Energy = 7
+Time = 29      Energy = 7
+Time = 96      Energy = 9
+Time = 33      Energy = 11
+Time = 63      Energy = 9
+Time = 35      Energy = 8
+Time = 60      Energy = 9
+Time = 22      Energy = 7
+Time = 80      Energy = 10
+Time = 83      Energy = 11
+Time = 60      Energy = 11
+Time = 42      Energy = 10
